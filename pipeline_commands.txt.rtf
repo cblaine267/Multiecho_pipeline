@@ -1,0 +1,52 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 AndaleMono;\f2\froman\fcharset0 Times-Italic;
+}
+{\colortbl;\red255\green255\blue255;\red47\green255\blue18;\red0\green0\blue0;\red0\green0\blue0;
+}
+{\*\expandedcolortbl;;\cssrgb\c15686\c99608\c7843;\csgray\c0\c90000;\cssrgb\c0\c0\c0;
+}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 PULL DOCKER:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1 \cf2 \cb3 \CocoaLigature0 docker pull chblaine/multiecho_pipeline:v4
+\f0 \cf0 \cb1 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+RUN DOCKER:\
+
+\f2\i\fs34\fsmilli17333 \cf4 \expnd0\expndtw0\kerning0
+docker run --rm -it \\
+\f0\i0\fs32 \
+
+\f2\i\fs34\fsmilli17333 -v "$(pwd)/license.txt":/usr/local/freesurfer/license.txt \\
+\f0\i0\fs32 \
+\pard\pardeftab720\li960\fi-960\partightenfactor0
+
+\f2\i\fs34\fsmilli17333 \cf4 -v /Users/chblaine/Documents/R61:/data \\
+\f0\i0\fs32 \
+
+\f2\i\fs34\fsmilli17333 chblaine/multiecho_pipeline:v5 \\\
+bash
+\f0\i0\fs32 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f2\i\fs34\fsmilli17333 \cf4 docker run --rm -it \\
+\f0\i0\fs32 \
+
+\f2\i\fs34\fsmilli17333 -v "$(pwd)/license.txt":/usr/local/freesurfer/license.txt \\
+\f0\i0\fs32 \
+\pard\pardeftab720\li960\fi-960\partightenfactor0
+
+\f2\i\fs34\fsmilli17333 \cf4 -v /Users/chblaine/Documents/R61:/data \\
+\f0\i0\fs32 \
+
+\f2\i\fs34\fsmilli17333 multiecho_pipeline:v5 \\\
+bash
+\f0\i0\fs32 \
+\pard\pardeftab720\li960\fi-960\partightenfactor0
+\cf4 \
+\
+}

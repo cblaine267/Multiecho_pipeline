@@ -1,0 +1,16 @@
+
+res0urces:
+===========================================================================================================================================
+auto_screen_parse_man_rej.m: matlab script called from adjusted_func_denoise_meica.sh that iterates through the initial tedana 
+output and manually rejects / accepts components
+
+
+make_precise_subcortical_labels.sh: bash script that creates label volume for dtseries creation, included in adjusted_func_denoise_meica.sh,
+so should not be necessary to run in isolation
+============================================================================================================================================
+
+***
+The other scripts / files are utilzed for different elements of the pipeline.
+I have edited auto_scren_parse_man_rej.m to be compatible with PMACS.
+***
+
