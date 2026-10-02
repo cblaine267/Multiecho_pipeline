@@ -25,7 +25,7 @@
 source "$(dirname "$0")/pipeline_paths.sh"
 
 id=$1
-if [[ -z $id ]]; then 
+if [[ -z $id ]]; then
 	echo "Please enter subject's 4-digit ID (ex. C123):"
 	read id
 fi
@@ -131,10 +131,3 @@ echo "$id warping complete!"
 
 echo "time for step 9"
 # bsub -q bsc_normal /project/oathes_analysis2/R61/Liston-Laboratory-MultiEchofMRI-Pipeline-master/MultiEchofMRI-Pipeline/9_echo_warp.sh $id
-
-
-
-
-
-
-

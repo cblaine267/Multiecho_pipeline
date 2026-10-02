@@ -39,7 +39,7 @@ FLYWHEEL="${PROJECT}/scan_data/flywheel"
 SUBJECT_FLYWHEEL="${FLYWHEEL}/${id}"
 
 TEMPDIR="${SUBJECT_FLYWHEEL}/flywheel/oathes_lab/R61/${id}/ses-baseline"
-
+echo $TEMPDIR
 
 # =============================================================================
 # BIDS PATHS
@@ -155,7 +155,10 @@ ap_e5_json=$(find "$TEMPDIR" -type f -path "${AP_DIR}*multiecho*_e5.json" -print
 
 echo "Locating PA multiecho files..."
 
-pa_e1_nii=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA/*multiecho_PA*_e1.nii.gz" -print -quit)
+PA_DIR="$TEMPDIR/rsfMRI_multiecho_PA"
+
+pa_e1_nii=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA/*multiecho_PA*.nii.gz" -print -quit)
+
 pa_e2_nii=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA*/*multiecho_PA*_e2.nii.gz" -print -quit)
 pa_e3_nii=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA*/*multiecho_PA*_e3.nii.gz" -print -quit)
 pa_e4_nii=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA*/*multiecho_PA*_e4.nii.gz" -print -quit)
@@ -166,6 +169,7 @@ pa_e2_json=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA*/*multiecho_PA
 pa_e3_json=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA*/*multiecho_PA*_e3.json" -print -quit)
 pa_e4_json=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA*/*multiecho_PA*_e4.json" -print -quit)
 pa_e5_json=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA*/*multiecho_PA*_e5.json" -print -quit)
+
 
 # ------------------------------------------------------------
 # Find AP SBRef files
@@ -191,8 +195,7 @@ sbref_e5_json=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_SBRef/*multiec
 
 echo "Locating PA fieldmap..."
 
-fmap_nii=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA/*multiecho_PA*.nii.gz" -print -quit)
-fmap_json=$(find "$TEMPDIR" -type f -path "*/rsfMRI_multiecho_PA/*multiecho_PA*.json" -print -quit)
+
 
 # ------------------------------------------------------------
 # Copy anatomical files
@@ -280,29 +283,36 @@ echo "Copying PA multiecho BOLD files..."
 cp "$pa_e1_nii" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-1_bold.nii.gz"
 cp "$pa_e1_json" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-1_bold.json"
 
+
 cp "$pa_e2_nii" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-2_bold.nii.gz"
 cp "$pa_e2_json" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-2_bold.json"
+
 
 cp "$pa_e3_nii" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-3_bold.nii.gz"
 cp "$pa_e3_json" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-3_bold.json"
 
+
 cp "$pa_e4_nii" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-4_bold.nii.gz"
 cp "$pa_e4_json" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-4_bold.json"
 
+
 cp "$pa_e5_nii" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-5_bold.nii.gz"
 cp "$pa_e5_json" "$BIDS_SUB/func/sub-${id}_ses-baseline_task-rest_dir-PA_echo-5_bold.json"
+
 
 # ------------------------------------------------------------
 # Copy PA fieldmap
 # ------------------------------------------------------------
 
 echo "Copying PA fieldmap..."
+#echo $fmap_nii
+#echo $fmap_json
 
 
-cp $fmap_nii "${BIDS_FMAP}.nii.gz"
-cp $fmap_json "${BIDS_FMAP}.json"
+cp $pa_e1_nii $BIDS_SUB/fmap/sub-${id}_ses-baseline_dir-PA_run-01_epi.nii.gz
+cp $pa_e1_json $BIDS_SUB/fmap/sub-${id}_ses-baseline_dir-PA_run-01_epi.json
+BIDS_FMAP=$BIDS_SUB/fmap/sub-${id}_ses-baseline_dir-PA_run-01_epi.json
 
-BIDS_FMAP="$BIDS_SUB/fmap/sub-${id}_ses-baseline_dir-PA_run-01_epi.json"
 
 # ------------------------------------------------------------
 # Add BIDS metadata to fieldmap JSON
@@ -312,9 +322,9 @@ echo "Updating fieldmap JSON..."
 
 # append "IntendedFor" section to fmap json
 #echo "Append the following to $bids_fmap:"
-IntendedFor=$(echo \"IntendedFor\": [\"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-1_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-2_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-3_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-4_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-5_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-1_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-2_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-3_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-4_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-5_sbref.nii.gz\"],)
-RawSources=$(echo \"RawSources\": [\"/data/input/sub-${id}/ses-baseline/fmap/sub-${id}_ses-baseline_dir-PA_run-01_epi.nii.gz\"],)
-TaskName=$(echo \"TaskName\": \"rest\")
+#IntendedFor=$(echo \"IntendedFor\": [\"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-1_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-2_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-3_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-4_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-5_bold.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-#rest_dir-AP_echo-1_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-2_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-3_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-4_sbref.nii.gz\", \"ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_echo-5_sbref.nii.gz\"],)
+#RawSources=$(echo \"RawSources\": [\"/data/input/sub-${id}/ses-baseline/fmap/sub-${id}_ses-baseline_dir-PA_run-01_epi.nii.gz\"],)
+#TaskName=$(echo \"TaskName\": \"rest\")
 
 
 # Using 'sed' to automatically append IntendedFor fields
@@ -325,9 +335,45 @@ TaskName=$(echo \"TaskName\": \"rest\")
 # "$ i \  $IntendedFor" : (i)nsert tab ( \	) and $IntendedFor substitution
 # $bids_fmap : perform these substitutions and commands on $bids_fmap
 
-sed -i -e "$(( $( cat $bids_fmap | wc -l ) - 1 ))s/$/,/" -e "$ i \	$IntendedFor" -e "$ i \	$RawSources" -e "$ i \	$TaskName" $bids_fmap
+#sed -i -e "$(( $( cat $BIDS_FMAP | wc -l ) - 1 ))s/$/,/" -e "$ i \	$IntendedFor" -e "$ i \	$RawSources" -e "$ i \	$TaskName" $BIDS_FMAP
+echo $BIDS_FMAP
+#sed -i \
+#  -e "$(( $(cat "$BIDS_FMAP" | wc -l) - 1 ))s/$/,/" \
+#  -e "$ i \	$IntendedFor" \
+#  -e "$ i \	$RawSources" \
+#  -e "$ i \	$TaskName" \
+#  "$BIDS_FMAP"
+  # Add BIDS metadata
+python3 - "$BIDS_FMAP" "$id" <<'PY'
+import json
+import sys
 
+fmap = sys.argv[1]
+sub = sys.argv[2]
 
+with open(fmap, "r") as f:
+    data = json.load(f)
+
+data["IntendedFor"] = [
+    f"ses-baseline/func/sub-{sub}_ses-baseline_task-rest_dir-AP_echo-{i}_bold.nii.gz"
+    for i in range(1, 6)
+] + [
+    f"ses-baseline/func/sub-{sub}_ses-baseline_task-rest_dir-AP_echo-{i}_sbref.nii.gz"
+    for i in range(1, 6)
+]
+
+data["RawSources"] = [
+    f"/data/input/sub-{sub}/ses-baseline/fmap/sub-{sub}_ses-baseline_dir-PA_run-01_epi.nii.gz"
+]
+
+data["TaskName"] = "rest"
+
+with open(fmap, "w") as f:
+    json.dump(data, f, indent=4)
+    f.write("\n")
+PY
+
+cat $BIDS_FMAP
 # ------------------------------------------------------------
 # Final check
 # ------------------------------------------------------------

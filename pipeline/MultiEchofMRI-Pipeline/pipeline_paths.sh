@@ -27,7 +27,7 @@ else
     # LOCAL MAC - adjust for each user
     # -------------------------------------------------------------------------
 
-    PROJECT="/Users/chblaine/Documents/R61"
+    PROJECT="/Users/chblaine/Documents/Multiecho_pipeline"
     ENVIRONMENT="local"
 
 fi
@@ -101,7 +101,7 @@ TEMPLATEFLOW="${PROJECT}/dependencies/templateflow"
 #
 # Call:
 #
-#   set_subject J007
+#   set_subject "$id"
 #
 # before using these.
 # =============================================================================
@@ -127,23 +127,4 @@ set_subject() {
 }
 
 
-# =============================================================================
-# DOCKER PATHS
-# =============================================================================
-#
-# PROJECT is mounted as:
-#
-#   /Users/chblaine/Documents/R61  ->  /data
-#
-# Therefore scripts inside Docker can consistently use /data/...
-# =============================================================================
 
-DOCKER_PROJECT="/data"
-
-DOCKER_BIDS="/data/bids"
-
-DOCKER_FMRIPREP="/data/fmriprep/prerun_output"
-
-DOCKER_ACPC="/data/ME_acpc"
-
-DOCKER_RESOURCE="/data/res0urces"
