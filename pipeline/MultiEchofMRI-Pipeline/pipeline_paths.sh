@@ -114,6 +114,8 @@ set_subject() {
 
     HCP="${DERIVATIVE}/HCP/${id}"
 
+    TEDANA_SESSION="${HCP}/func/rest/session_1/run_1/"
+
     SUBJECT_BIDS="${BIDS}/${SUBJECT}"
 
     SUBJECT_FMRIPREP="${FMRIPREP}/${SUBJECT}"

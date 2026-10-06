@@ -27,75 +27,77 @@ fi
 
 echo $id
 
-start=$SECONDS
 # SET PATHS
 source "$(dirname "$0")/pipeline_paths.sh"
 set_subject "$id"
 
 
-
-
-#echo "Did you edit res0urces/auto_screen_parse_man_rej.m for the Subject ID? Cntrl + C if no"
-#read y
-
-#echo "Did you ibash + load the necessary modules & paths? Cntrl + C if no"
-#read y
-
-
-echo "$id"
-
-TEDDIR="${HCP}/func/rest/session_1/run_1"
-
-if [[ ! -f "$TEDDIR/TE.txt" ]]; then
-
-    echo "TE.txt not found. Copying from resources..."
-
-    if [[ ! -f "$RESOURCE/TE.txt" ]]; then
-        echo "ERROR: Resource TE.txt does not exist:"
-        echo "$RESOURCE/TE.txt"
-        exit 1
-    fi
-
-    cp "$RESOURCE/TE.txt" "$TEDDIR/TE.txt"
-
-else
-
-    echo "TE.txt already exists."
-
-fi
-
-
-echo "Running ME-ICA denoising for $i..."
 ok=$2
 if [[ -z $ok ]]; then
 		echo "Does Docker have more than 32 GB of memory available (y/n)? if no, job submitted to cluster:"
 		read ok
 fi
 if [[ "$ok" == "y" ]]; then
-		# =============================================================================
-		# TEDANA ENVIRONMENT
-		# =============================================================================
-		echo "Submitting to docker"
-		# Conda itself is installed at /opt/conda
-		source /opt/conda/etc/profile.d/conda.sh
-
-		# Tedana environment created in Dockerfile
-		conda activate /opt/conda-envs/tedana
+	start=$SECONDS
+	bash "${PIPELINE}/6c_merge_warp.sh" $id
 
 
-		echo "Conda environment: $CONDA_PREFIX"
-		echo "Python:            $(which python)"
+	#echo "Did you edit res0urces/auto_screen_parse_man_rej.m for the Subject ID? Cntrl + C if no"
+	#read y
 
-		# Only run this if the environment actually contains tedana
-		if command -v tedana >/dev/null 2>&1; then
-		    echo "Tedana:            $(which tedana)"
-		    tedana --version
-		fi
-		bash "$PIPELINE/adjusted_func_denoise_meica.sh" "$PROJECT" "$id"
+	#echo "Did you ibash + load the necessary modules & paths? Cntrl + C if no"
+	#read y
 
+
+	echo "$id"
+
+	TEDDIR="${HCP}/func/rest/session_1/run_1"
+
+	if [[ ! -f "$TEDDIR/TE.txt" ]]; then
+
+	    echo "TE.txt not found. Copying from resources..."
+
+	    if [[ ! -f "$RESOURCE/TE.txt" ]]; then
+	        echo "ERROR: Resource TE.txt does not exist:"
+	        echo "$RESOURCE/TE.txt"
+	        exit 1
+	    fi
+
+	    cp "$RESOURCE/TE.txt" "$TEDDIR/TE.txt"
+
+	else
+
+	    echo "TE.txt already exists."
+
+	fi
+
+
+	echo "Running ME-ICA denoising for $i..."
+	# =============================================================================
+	# TEDANA ENVIRONMENT
+	# =============================================================================
+	echo "Submitting to docker"
+	# Conda itself is installed at /opt/conda
+	source /opt/conda/etc/profile.d/conda.sh
+
+	# Tedana environment created in Dockerfile
+	conda activate /opt/conda-envs/tedana
+
+
+	echo "Conda environment: $CONDA_PREFIX"
+	echo "Python:            $(which python)"
+
+	# Only run this if the environment actually contains tedana
+	if command -v tedana >/dev/null 2>&1; then
+	    echo "Tedana:            $(which tedana)"
+	    tedana --version
+	fi
+	bash "$PIPELINE/adjusted_func_denoise_meica.sh" "$PROJECT" "$id"
 else
 
+
 	 	source "$PIPELINE/cluster_help.sh"
-		tedana_cluster_submit $id
+	 	PUSH="tedana"
+		cluster_submit $id $tedana
 
 fi
