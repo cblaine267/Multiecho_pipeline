@@ -1,0 +1,7 @@
+{
+	"bold": {
+		"session": ["baseline"],
+		"task": ["rest"],
+		"space": ["MNI152NLin6Asym"]
+		}
+}

@@ -16,6 +16,8 @@ TEDANA_SCRIPT="9b_merge_and_mask.sh" # 9b calls 10_tedana.sh
 FMRIPREP_SCRIPT="7_submit_fmriprep_prerun_freesurfer.sh"
 RECLASS_SCRIPT="10b_ica_reclass.sh"
 WARP_SCRIPT="8_acpc_warp.sh"
+XCPD_SCRIPT="12_submit_xcp_d_mni152.sh"
+ANTS_FEAT="13_transform_mni_to_t1w.sh"
 
 
 ##
@@ -39,17 +41,25 @@ cluster_submit(){
     SCRIPT=$FMRIPREP_SCRIPT
   elif [[ "$PUSH" == "ICAReclass" ]];then
     SCRIPT=$RECLASS_SCRIPT
+  elif [[ "$PUSH" == "xcpd" ]];then
+    SCRIPT=$XCPD_SCRIPT
   elif [[ "$PUSH" == "warp" ]];then
     SCRIPT=$WARP_SCRIPT
     # 8_acpc_warp calls 9_echo_warp in lpc
-  fi
+  elif [[ "$PUSH" == "ants" ]];then
+    SCRIPT=$ANTS_FEAT
 
+  fi
+  echo $SCRIPT
 
   JOB_OUTPUT=$(ssh -Y "${HPC_USER}@${HPC_HOST}" \
     "cd $REMOTE_SCRIPT_DIR && bsub -q bsc_long -e ${LOCAL_SUBMIT_LOG}/${id}_${PUSH}.e -o ${LOCAL_SUBMIT_LOG}/${id}_${PUSH}.o bash $SCRIPT $id")
   echo "$JOB_OUTPUT"
 
+  if [[ "$PUSH" == "ants" ]];then
+    echo "Steps 13, 14, and 15 submitted to LPC."
 
+  fi
 
 }
 
@@ -89,7 +99,16 @@ push_request(){
     scp -v "${TEDANA_SESSION}/Tedana+ManualComponentClassification/RejectedComponents.txt" "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/${id}/func/rest/session_1/run_1/" 
   elif [[ "$data" == "warp" ]]; then
     echo "No data pushed. Inputs already on LPC"
+  elif [[ "$data" == "xcpd" ]]; then
+     echo "Comment out if xcpd ran on cluster"
+    #scp -r -v "${SUBJECT_XCP}/func/sub-${id}_ses-baseline_task-rest_dir-AP_space-MNI152NLin6Asym_res-2_desc-denoised_bold.nii.gz"  "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/xcp_d/xcp_d/sub-${id}/ses-baseline/func/" 
 
+  elif [[ "$data" == "ICA_MIX" ]]; then
+
+    scp -r -v "${ICA_MIX}/sub-$(echo $id)_ses-baseline_task-rest_dir-AP_desc-confounds_timeseries.tsv" "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/xcp_d/xcp_d/sub-${id}/ses-baseline/func/" 
+
+  elif [[ "$data" == "ants" ]]; then
+    echo "No data pushed. Inputs already on LPC"
   fi
 
 }
@@ -113,7 +132,7 @@ pull_request(){
   if [[ "$data" == "fmriprep" ]]; then
   
 
-    scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/fmriprep/prerun_output/sub-$(echo $id)/" ${SUBJECT_FMRIPREP}
+    scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/fmriprep/prerun_output/sub-$(echo $id)/" ${FMRIPREP}
 
 
   elif [[ "$data" == "tedana" ]]; then
@@ -135,82 +154,24 @@ pull_request(){
     scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/$id/func/rest/session_1/run_1/Tedana+ManualComponentClassification/AcceptedComponents.txt" "${TEDANA_SESSION}/Tedana+ManualComponentClassification/"
     scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/$id/func/rest/session_1/run_1/Tedana+ManualComponentClassification/RejectedComponents.txt" "${TEDANA_SESSION}/Tedana+ManualComponentClassification/"
 
+  elif [[ "$data" == "ICAMix" ]]; then
+    scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/xcp_d/xcp_d/sub-${id}/ses-baseline/func/" "${ICA_MIX}/sub-$(echo $id)_ses-baseline_task-rest_dir-AP_desc-confounds_timeseries.tsv"
+
+  elif [[ "$data" == "xcpd" ]]; then
+
+    scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/xcp_d/xcp_d/sub-${id}/ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_space-MNI152NLin6Asym_res-2_desc-denoised_bold.nii.gz" "${SUBJECT_XCP}/func"
+    #scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/xcp_d/xcp_d/sub-${id}/ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_space-T1w_desc-denoised_bold.nii.gz" "${SUBJECT_XCP}/func"
+
+  elif [[ "$data" == "t1w" ]]; then
+
+    scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/xcp_d/xcp_d/sub-${id}/ses-baseline/func/sub-${id}_ses-baseline_task-rest_dir-AP_space-T1w_desc-denoised_bold.nii.gz" "${SUBJECT_XCP}/func"
+    scp -r -v "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/fmriprep/prerun_output/sub-$(echo $id)/sub-${id}/ses-baseline/anat/Liston_sgACCgm_sub-${id}.nii.gz" "${SUBJECT_FMRIPREP}/sub-${id}/ses-baseline/anat"
+
   fi
 
 }
 
 
-
-
-### OLD FUNCTIONS REPLACED BY CLUSTER SUBMIT
-
-tedana_cluster_submit(){
-
-  id=$1
-  echo "Adding relevant files to HPC..."
-
-
-  echo "Submitting job to cluster..."
-  # Triggers sbatch inside the remote directory
-  JOB_OUTPUT=$(ssh -Y "${HPC_USER}@${HPC_HOST}" \
-    "cd $REMOTE_SCRIPT_DIR && bsub -q bsc_long -e ${LOCAL_SUBMIT_LOG}/${id}_reclass.e -o ${LOCAL_SUBMIT_LOG}/${id}_reclass.o bash $TEDANA_SCRIPT $id")
-  echo "$JOB_OUTPUT"
-
-}
-
-reclass_cluster_submit(){
-
-  id=$1
-  echo "Adding relevant files to LPC..."
-  PUSH=$2
-
-
-  push_request $id $PUSH
-
-  echo "Submitting job to cluster..."
-  # Triggers sbatch inside the remote directory
-  JOB_OUTPUT=$(ssh -Y "${HPC_USER}@${HPC_HOST}" \
-    "cd $REMOTE_SCRIPT_DIR && bsub -q bsc_long -e ${LOCAL_SUBMIT_LOG}/${id}_reclass.e -o ${LOCAL_SUBMIT_LOG}/${id}_reclass.o bash $RECLASS_SCRIPT $id")
-  echo "$JOB_OUTPUT"
-
-}
-
-
-
-fmriprep_cluster_submit(){
-  
-  # script to submit fmriprep cluster job. Inputs needed- HCP/anat/T1w and bids.
-
-  source "$(dirname "$0")/pipeline_paths.sh"
-
-  id=$1
-
-  set_subject "$id"
-  echo "Adding bids and freesurfer files to HPC..."
-  
-
-
-  ################
-  # Uncomment to upload data to remote cluster
-
-
-  #scp -r -v  ${SUBJECT_BIDS} "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/bids"
-  #scp -r -v "${HCP}/anat/T1w/$id/*" "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/fmriprep/prerun_output/sub-$(echo $id)/sourcedata/freesurfer/sub-$(echo $id)"
-  #scp -r -v "${HCP}/anat/T1w/fsaverage" "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/fmriprep/prerun_output/sub-$(echo $id)/sourcedata/freesurfer"
-
-  
-
-
-
-  echo "Submitting job to cluster..."
-  # Triggers sbatch inside the remote directory
-  JOB_OUTPUT=$(ssh -Y "${HPC_USER}@${HPC_HOST}" \
-    "cd $REMOTE_SCRIPT_DIR && bsub -q bsc_normal -e ${LOCAL_SUBMIT_LOG}/fmriprep_$id.e -o ${LOCAL_SUBMIT_LOG}/fmriprep_$id.o bash $FMRIPREP_SCRIPT $id")
-  echo "$JOB_OUTPUT"
-
-}
-
-# How to run command: bash "$PIPELINE/pull_request.sh" $id $data
 
 
 

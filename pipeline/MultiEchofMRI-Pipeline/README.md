@@ -9,7 +9,7 @@ pipeline_paths.sh - sets all the paths for user's directory. User must edit this
       Pre, Current, Post Freesurfer; must be run as bsub script
 3_fmriprep_wrapper.sh - submits fmriprep job.
       if local host has enough RAM, submits on docker. If not, submits job to cluster.
-4_fmriprep_docker.sh – creates bids directory for new R61 subject to run through fMRIPrep; 
+4_fmriprep_docker.sh  – creates bids directory for new R61 subject to run through fMRIPrep; 
       run as bash script. Unable to run locally with 32 gb of ram.
 5_acpc_warp.sh - generates ACPC aligned boldref images and MNI<->T1w warp files
 6_echo_warp.sh - splits echo images into individual volumes and applies warp to each - submitted to cluster bc it takes a long time for each

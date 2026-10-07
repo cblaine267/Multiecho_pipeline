@@ -35,6 +35,7 @@ if [[ "$ok" == "y" ]]; then
 else
 
 	 	source "$PIPELINE/cluster_help.sh"
-		fmriprep_cluster_submit $id
+	 	PUSH="fmriprep"
+		cluster_submit $id $PUSH
 
 fi

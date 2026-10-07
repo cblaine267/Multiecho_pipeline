@@ -65,18 +65,13 @@ ACPC="${DERIVATIVE}/ME_acpc"
 
 HCP_DIR="${DERIVATIVE}/HCP"
 
+ICA_MIX="${DERIVATIVE}/ica_mixing_files"
+
+XCPD="${DERIVATIVE}/xcp_d"
+
 MATLAB_DEPENDENCY="${PROJECT}/dependencies/matlab_dependency"
 
 
-
-
-# -----------------------------------------------------------------------------
-# DOCKER IMAGES
-# -----------------------------------------------------------------------------
-
-HCP_IMAGE="hcp-pipeline4.7.0:v6"
-
-FMRIPREP_IMAGE="nipreps/fmriprep:23.2.3"
 
 # TEDANA
 
@@ -125,6 +120,8 @@ set_subject() {
     SUBJECT_ACPC="${ACPC}/${id}"
 
     ECHO="${SUBJECT_ACPC}/echoes"
+
+    SUBJECT_XCP="${XCPD}/xcp_d/sub-${id}/ses-baseline"
 
 }
 
