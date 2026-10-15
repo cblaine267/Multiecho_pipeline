@@ -19,7 +19,7 @@
 
 
 # SET PATHS
-source "$(dirname "$0")/pipeline_paths.sh"
+source "/data/pipeline/MultiEchofMRI-Pipeline/pipeline_paths.sh"
 
 id=$1
 if [[ -z $id ]]; then 
@@ -43,9 +43,19 @@ res0urces=$RESOURCE
 bold=$(readlink -e $xcp/sub-${id}_ses-baseline_task-rest_dir-AP_space-T1w_desc-denoised_bold.nii.gz)
 ev=$(readlink -e $xcp/sub-${id}_sgACC_fsl.txt)
 
-volumes=$(3dinfo -nv $bold)
-voxpervol=$(3dinfo -nijk $bold)
+#volumes=$(3dinfo -nv $bold)
+#voxpervol=$(3dinfo -nijk $bold)
+
+volumes=$(fslval $bold dim4)
+nx=$(fslval $bold dim1)
+ny=$(fslval $bold dim2)
+nz=$(fslval $bold dim3)
+voxpervol=$(($nx*$ny*$nz))
+echo $voxpervol
+
 voxels=$(($volumes*$voxpervol))
+
+
 
 outputdir="$featdir/${id}.feat"
 

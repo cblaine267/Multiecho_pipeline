@@ -10,7 +10,7 @@ if [[ -z $id ]]; then
     echo "Please enter subject's 4-digit ID (ex. C123):"
     read id
 fi
-source "$(dirname "$0")/pipeline_paths.sh"
+source "/data/pipeline/MultiEchofMRI-Pipeline/pipeline_paths.sh"
 set_subject "$id"
 StudyFolder=${HCP_DIR} # location of Subject folder
 Subject=$id

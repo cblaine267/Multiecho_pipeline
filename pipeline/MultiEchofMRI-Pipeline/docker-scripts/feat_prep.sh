@@ -5,7 +5,7 @@
 # JD 9/13/24 - adapted from steps defined by Julie Grier and Chuck Lynch
 
 # SET PATHS
-source "$(dirname "$0")/pipeline_paths.sh"
+source "/data/pipeline/MultiEchofMRI-Pipeline/pipeline_paths.sh"
 
 id=$1
 if [[ -z $id ]]; then 
@@ -36,4 +36,6 @@ echo "Time series generated: $XCP/sub-${id}_sgACC_fsl.txt"
 
 #echo "Running feat_submit"
 
-source ./13_fsl_feat_submit.sh
+#source ./fsl_feat_submit.sh 
+
+bash "$DOCKER_PIPELINE/fsl_feat_submit.sh" "$id"

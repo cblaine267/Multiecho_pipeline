@@ -7,7 +7,6 @@
 
 
 # Enter Subject ID
-
 id=$1
 if [[ -z $id ]]; then
     echo "Please enter subject's 4-digit ID (ex. C123):"
@@ -29,28 +28,14 @@ if [[ "$ok" == "y" ]]; then
 		# =============================================================================
     echo "Running docker"
 
-    # Uncomment if outputs needed from LPC to run feat
-    #source "$PIPELINE/cluster_help.sh"
-    #PULL="xcpd"
-    #pull_request $id $PULL
-
-    docker run --rm -it \
-    -v "${PROJECT}:/data" \
-    chblaine/multiecho_pipeline:v5 \
-    bash /data/pipeline/MultiEchofMRI-Pipeline/12_feat_prep.sh "$id"
-		
-
-
-
-    #bash "$PIPELINE/11_transform_mni_to_t1w.sh" $id
+    bash "$DOCKER_PIPELINE/ica_reclass.sh" $id
 
 
 
 else
 
-	echo "Script already submitted. Pull feat output from LPC."
 	 	source "$PIPELINE/cluster_help.sh"
-	 	PUSH="ants"
+	 	PUSH="ICAReclass"
 		cluster_submit $id $PUSH
 
 fi

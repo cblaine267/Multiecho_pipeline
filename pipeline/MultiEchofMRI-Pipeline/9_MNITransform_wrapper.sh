@@ -7,6 +7,7 @@
 
 
 # Enter Subject ID
+
 id=$1
 if [[ -z $id ]]; then
     echo "Please enter subject's 4-digit ID (ex. C123):"
@@ -27,18 +28,26 @@ if [[ "$ok" == "y" ]]; then
 		# DOCKER FMRIPREP
 		# =============================================================================
     echo "Running docker"
+    #source "$PIPELINE/cluster_help.sh"
+    #PULL="xcpd"
+    #pull_request $id $PULL
 
-    bash "$PIPELINE/10_xcp_d_mni152.sh" $id
+    docker run --rm -it \
+    -v "${PROJECT}:/data" \
+    ants_multiecho:v2 \
+    bash /data/pipeline/MultiEchofMRI-Pipeline/docker-scripts/transform_mni_to_t1w.sh "$id"
+		
+
+
+
+    #bash "$PIPELINE/11_transform_mni_to_t1w.sh" $id
 
 
 
 else
 
 	 	source "$PIPELINE/cluster_help.sh"
-	 	PUSH="xcpd"
+	 	PUSH="ants"
 		cluster_submit $id $PUSH
-
-
-		
 
 fi

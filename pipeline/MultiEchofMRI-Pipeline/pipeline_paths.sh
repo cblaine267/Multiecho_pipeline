@@ -47,6 +47,8 @@ LOGS="${PROJECT}/logs"
 
 PIPELINE="${PROJECT}/pipeline/MultiEchofMRI-Pipeline"
 
+DOCKER_PIPELINE="${PROJECT}/pipeline/MultiEchofMRI-Pipeline/docker-scripts"
+
 RESOURCE="${PROJECT}/pipeline/res0urces"
 
 ENVIRONMENTSCRIPT="${PROJECT}/pipeline/HCPpipelines_4.7.0/Examples/Scripts/SetUpHCPPipeline.sh"
@@ -109,7 +111,7 @@ set_subject() {
 
     HCP="${DERIVATIVE}/HCP/${id}"
 
-    TEDANA_SESSION="${HCP}/func/rest/session_1/run_1/"
+    TEDANA_SESSION="${DERIVATIVE}/tedana/${id}/session_1/run_1/"
 
     SUBJECT_BIDS="${BIDS}/${SUBJECT}"
 

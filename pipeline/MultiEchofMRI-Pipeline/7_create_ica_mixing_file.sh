@@ -26,5 +26,5 @@ echo "$id"
 
 
 echo $TEDANA_SESSION
-python creating_ica_mixing_file_local.py $id $TEDANA_SESSION
+python "$DOCKER_PIPELINE/creating_ica_mixing_file_local.py" $id $TEDANA_SESSION
 mv sub-$(echo $id)_ses-baseline_task-rest_dir-AP_desc-confounds_timeseries.tsv ${ICA_MIX}

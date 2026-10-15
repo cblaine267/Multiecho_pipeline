@@ -101,9 +101,9 @@ for i in $(seq 1 5) ; do
 
     echo "Running applywarp for echo ${i}..."
 
-    bash "$RESOURCE/6b_applywarp.sh" "$id" "$i" \
-        > "$R61/logs/warp/${id}_warp_echo${i}.o" \
-        2> "$R61/logs/warp/${id}_warp_echo${i}.e"
+    bash "$DOCKER_PIPELINE/applywarp_docker.sh" "$id" "$i" \
+        > "$PROJECT/logs/warp/${id}_warp_echo${i}.o" \
+        2> "$PROJECT/logs/warp/${id}_warp_echo${i}.e"
 
     echo "Echo ${i} complete."
 

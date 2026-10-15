@@ -98,6 +98,61 @@ echo "Duration: $hours hour(s), $minutes minute(s), $seconds seconds"
 
 
 
+    
+    
+#echo "Did you edit res0urces/auto_screen_parse_man_rej.m for the Subject ID? Cntrl + C if no"
+    #read y
+
+    #echo "Did you ibash + load the necessary modules & paths? Cntrl + C if no"
+    #read y
+
+
+echo "$id"
+
+TEDDIR="${HCP}/func/rest/session_1/run_1"
+
+if [[ ! -f "$TEDDIR/TE.txt" ]]; then
+
+    echo "TE.txt not found. Copying from resources..."
+
+    if [[ ! -f "$RESOURCE/TE.txt" ]]; then
+        echo "ERROR: Resource TE.txt does not exist:"
+        echo "$RESOURCE/TE.txt"
+        exit 1
+    fi
+
+    cp "$RESOURCE/TE.txt" "$TEDDIR/TE.txt"
+
+else
+
+    echo "TE.txt already exists."
+
+fi
+
+
+echo "Running ME-ICA denoising for $id..."
+# =============================================================================
+# TEDANA ENVIRONMENT
+# =============================================================================
+echo "Submitting to docker"
+# Conda itself is installed at /opt/conda
+source /opt/conda/etc/profile.d/conda.sh
+
+# Tedana environment created in Dockerfile
+conda activate /opt/conda-envs/tedana
+
+
+echo "Conda environment: $CONDA_PREFIX"
+echo "Python:            $(which python)"
+
+# Only run this if the environment actually contains tedana
+if command -v tedana >/dev/null 2>&1; then
+    echo "Tedana:            $(which tedana)"
+    tedana --version
+fi
+bash "$DOCKER_PIPELINE/adjusted_func_denoise_meica_local.sh" "$PROJECT" "$id"
+
+
 
 
 

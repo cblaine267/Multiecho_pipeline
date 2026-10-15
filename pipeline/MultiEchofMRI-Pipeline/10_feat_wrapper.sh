@@ -1,9 +1,6 @@
 #!/bin/bash
-
 # CHB; (camilleblaine23@gmail.com)
-# note: this script is a wrapper to submit fmriprep
-# Docker > 32 GB RAM available --> fmriprep runs locally using docker container ;
-# Docker < 32 GB RAM --> submit fmriprep job to HPC (cluster)
+# Wrapper script to submit feat
 
 
 # Enter Subject ID
@@ -28,14 +25,16 @@ if [[ "$ok" == "y" ]]; then
 		# DOCKER FMRIPREP
 		# =============================================================================
     echo "Running docker"
+
+    # Uncomment if outputs needed from LPC to run feat
     #source "$PIPELINE/cluster_help.sh"
     #PULL="xcpd"
     #pull_request $id $PULL
 
     docker run --rm -it \
     -v "${PROJECT}:/data" \
-    chblaine/ants_multiecho:v1 \
-    bash /data/pipeline/MultiEchofMRI-Pipeline/11_transform_mni_to_t1w.sh "$id"
+    chblaine/multiecho_pipeline:v5 \
+    bash /data/pipeline/MultiEchofMRI-Pipeline/docker-scripts/feat_prep.sh "$id"
 		
 
 
@@ -46,6 +45,7 @@ if [[ "$ok" == "y" ]]; then
 
 else
 
+	echo "Script already submitted. Pull feat output from LPC."
 	 	source "$PIPELINE/cluster_help.sh"
 	 	PUSH="ants"
 		cluster_submit $id $PUSH

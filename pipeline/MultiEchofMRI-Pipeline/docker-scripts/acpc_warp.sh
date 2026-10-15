@@ -130,4 +130,5 @@ echo "$id warping complete!"
 # Likely a lot of cleanup potential here - lots of files that we don't end up needing or using
 
 echo "time for step 9"
+bash $DOCKER_PIPELINE/echo_warp.sh "$id"
 # bsub -q bsc_normal /project/oathes_analysis2/R61/Liston-Laboratory-MultiEchofMRI-Pipeline-master/MultiEchofMRI-Pipeline/9_echo_warp.sh $id

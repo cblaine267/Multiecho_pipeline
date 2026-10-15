@@ -26,8 +26,12 @@ if [[ "$ok" == "y" ]]; then
         # DOCKER FMRIPREP
         # =============================================================================
     echo "Running docker"
-
-    bash "$PIPELINE/5_acpc_warp.sh" $id
+    
+    docker run --rm -it \
+    -v "${PROJECT}:/data" \
+    chblaine/multiecho_pipeline:v4 \
+    bash /data/pipeline/MultiEchofMRI-Pipeline/docker-scripts/acpc_warp.sh "$id"
+    
 
 
 

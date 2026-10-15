@@ -28,7 +28,7 @@ if [[ "$ok" == "y" ]]; then
 		# =============================================================================
     echo "Running docker"
 
-    bash "$PIPELINE/4_fmriprep.sh" $id
+    bash "$DOCKER_PIPELINE/fmriprep_docker.sh" $id
 
 
 

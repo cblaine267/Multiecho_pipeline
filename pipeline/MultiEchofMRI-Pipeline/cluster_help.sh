@@ -18,6 +18,7 @@ RECLASS_SCRIPT="10b_ica_reclass.sh"
 WARP_SCRIPT="8_acpc_warp.sh"
 XCPD_SCRIPT="12_submit_xcp_d_mni152.sh"
 ANTS_FEAT="13_transform_mni_to_t1w.sh"
+FREESURFER_SCRIPT="3_freesurfer.sh"
 
 
 ##
@@ -48,12 +49,13 @@ cluster_submit(){
     # 8_acpc_warp calls 9_echo_warp in lpc
   elif [[ "$PUSH" == "ants" ]];then
     SCRIPT=$ANTS_FEAT
-
+  elif [[ "$PUSH" == "freesurfer" ]];then
+    SCRIPT=$FREESURFER_SCRIPT
   fi
   echo $SCRIPT
 
   JOB_OUTPUT=$(ssh -Y "${HPC_USER}@${HPC_HOST}" \
-    "cd $REMOTE_SCRIPT_DIR && bsub -q bsc_long -e ${LOCAL_SUBMIT_LOG}/${id}_${PUSH}.e -o ${LOCAL_SUBMIT_LOG}/${id}_${PUSH}.o bash $SCRIPT $id")
+    "cd $REMOTE_SCRIPT_DIR && bsub -q bsc_long -e ${LOCAL_SUBMIT_LOG}/${id}_${PUSH}.e -o ${LOCAL_SUBMIT_LOG}/${id}_${PUSH}.o bash $SCRIPT "$id"")
   echo "$JOB_OUTPUT"
 
   if [[ "$PUSH" == "ants" ]];then
@@ -81,9 +83,9 @@ push_request(){
   fi
 
   if [[ "$data" == "fmriprep" ]]; then
-  
+    echo "fressurfer data being pushed to LPC"
 
-    scp -r -v ${SUBJECT_FMRIPREP} "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/fmriprep/prerun_output/sub-$(echo $id)/" 
+    #scp -r -v ${SUBJECT_FMRIPREP} "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/fmriprep/prerun_output/sub-$(echo $id)/" 
 
 
   elif [[ "$data" == "tedana" ]]; then
@@ -98,6 +100,7 @@ push_request(){
     scp -v "${TEDANA_SESSION}/Tedana+ManualComponentClassification/AcceptedComponents.txt" "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/${id}/func/rest/session_1/run_1/" 
     scp -v "${TEDANA_SESSION}/Tedana+ManualComponentClassification/RejectedComponents.txt" "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/${id}/func/rest/session_1/run_1/" 
   elif [[ "$data" == "warp" ]]; then
+
     echo "No data pushed. Inputs already on LPC"
   elif [[ "$data" == "xcpd" ]]; then
      echo "Comment out if xcpd ran on cluster"
@@ -109,6 +112,11 @@ push_request(){
 
   elif [[ "$data" == "ants" ]]; then
     echo "No data pushed. Inputs already on LPC"
+  elif [[ "$data" == "freesurfer" ]]; then
+    echo "Comment out if bids already on cluster"
+    #scp -r -v "${SUBJECT_BIDS}"  "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/bids/" 
+    #scp -r -v "${HCP}"  "${HPC_USER}@${HPC_HOST}://${REMOTE_PROJECT_DIR}/" 
+
   fi
 
 }

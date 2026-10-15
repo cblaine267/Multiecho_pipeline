@@ -28,14 +28,17 @@ if [[ "$ok" == "y" ]]; then
 		# =============================================================================
     echo "Running docker"
 
-    bash "$PIPELINE/8_ica_reclass.sh" $id
+    bash "$DOCKER_PIPELINE/xcp_d_mni152_local.sh" $id
 
 
 
 else
 
 	 	source "$PIPELINE/cluster_help.sh"
-	 	PUSH="ICAReclass"
+	 	PUSH="xcpd"
 		cluster_submit $id $PUSH
+
+
+		
 
 fi

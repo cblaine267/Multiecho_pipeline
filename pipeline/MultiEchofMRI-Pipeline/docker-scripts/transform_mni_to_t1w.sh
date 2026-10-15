@@ -35,9 +35,13 @@ prefix="MNI152-res2_to_T1w"
 
 # Disassemble the .h5 file related to the transform you need
 # In this case, MNI to T1w
+echo "id=$id"
+echo "ANAT=$ANAT"
+echo "prefix=$prefix"
+#ls -lh "$ANAT"/*xfm.h5
 CompositeTransformUtil --disassemble "$ANAT/sub-${id}_ses-baseline_from-MNI152NLin6Asym_to-T1w_mode-image_xfm.h5" $prefix
-echo $ANAT/sub-${id}_ses-baseline_from-MNI152NLin6Asym_to-T1w_mode-image_xfm.h5
-echo $prefix
+#echo $ANAT/sub-${id}_ses-baseline_from-MNI152NLin6Asym_to-T1w_mode-image_xfm.h5
+#echo $prefix
 wd=$(pwd)
 mv $wd/00_${prefix}*.nii.gz $ANAT
 mv $wd/01_${prefix}*.mat $ANAT
