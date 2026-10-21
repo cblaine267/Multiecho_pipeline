@@ -27,7 +27,7 @@ else
     # LOCAL MAC - adjust for each user
     # -------------------------------------------------------------------------
 
-    PROJECT="/Users/chblaine/Documents/Multiecho_pipeline"
+    PROJECT="/Users/camilleblaine/Multiecho_pipeline"
     ENVIRONMENT="local"
 
 fi

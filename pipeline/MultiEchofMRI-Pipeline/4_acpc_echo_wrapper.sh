@@ -3,7 +3,7 @@
 # R61 Pipeline Step 5 - ACPC warp wrapper script
 
 # SET PATHS
-source "$(dirname "$0")/pipeline_paths.sh"
+source "$(pwd)/pipeline_paths.sh"
 
 id=$1
 if [[ -z $id ]]; then
@@ -14,7 +14,7 @@ fi
 echo $id
 set_subject "$id"
 
-source "$SCRIPT_DIR/pipeline_paths.sh"
+
 
 ok=$2
 if [[ -z $ok ]]; then
@@ -29,7 +29,7 @@ if [[ "$ok" == "y" ]]; then
     
     docker run --rm -it \
     -v "${PROJECT}:/data" \
-    chblaine/multiecho_pipeline:v4 \
+    chblaine/multiecho_pipeline:v5 \
     bash /data/pipeline/MultiEchofMRI-Pipeline/docker-scripts/acpc_warp.sh "$id"
     
 

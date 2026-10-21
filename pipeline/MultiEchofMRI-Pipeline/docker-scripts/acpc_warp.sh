@@ -22,7 +22,7 @@
 # =============================================================================
 
 # SET PATHS
-source "$(dirname "$0")/pipeline_paths.sh"
+source "/data/pipeline/MultiEchofMRI-Pipeline/pipeline_paths.sh"
 
 id=$1
 if [[ -z $id ]]; then

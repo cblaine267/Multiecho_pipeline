@@ -7,7 +7,7 @@ set -e
 # ============================================================
 
 # SET PATHS
-source "$(dirname "$0")/pipeline_paths.sh"
+source "$(pwd)/pipeline_paths.sh"
 
 id=$1
 if [[ -z $id ]]; then

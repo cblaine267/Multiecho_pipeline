@@ -2,7 +2,7 @@
 # Adapted from commands outlined by Julie Grier, Chuck Lynch
 
 # Script inputs from bsub call
-source "$(dirname "$0")/pipeline_paths.sh"
+source "/data/pipeline/MultiEchofMRI-Pipeline/pipeline_paths.sh"
 
 id=$1
 echo_val=$2
