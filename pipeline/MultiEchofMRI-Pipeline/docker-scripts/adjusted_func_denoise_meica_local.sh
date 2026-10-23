@@ -7,12 +7,12 @@
 
 #bash "$PIPELINE/adjusted_func_denoise_meica.sh" "$PROJECT" "$i"
 
-id=$2
-
-source "$(dirname "$0")/pipeline_paths.sh"
+id=$1
+export PATH=/opt/conda-envs/tedana/bin:$PATH
+source "/data/pipeline/MultiEchofMRI-Pipeline/pipeline_paths.sh"
 set_subject "$id"
 Subject="${Subject:-$id}"
-echo "Subject=$Subject"
+echo "Subject=${Subject}"
 
 StudyFolder=${PROJECT}
 Subdir=${HCP}

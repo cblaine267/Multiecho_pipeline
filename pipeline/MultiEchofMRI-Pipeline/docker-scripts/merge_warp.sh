@@ -19,7 +19,7 @@ echo $id
 
 start=$SECONDS
 # SET PATHS
-source "$(dirname "$0")/pipeline_paths.sh"
+source "/data/pipeline/MultiEchofMRI-Pipeline/pipeline_paths.sh"
 set_subject "$id"
 
 # define pathways & ref files

@@ -28,7 +28,7 @@ fi
 echo $id
 
 # SET PATHS
-source "$(dirname "$0")/pipeline_paths.sh"
+source "$(pwd)/pipeline_paths.sh"
 set_subject "$id"
 
 
@@ -44,7 +44,7 @@ if [[ "$ok" == "y" ]]; then
 	
 	docker run --rm -it \
     -v "${PROJECT}:/data" \
-    chblaine/multiecho_pipeline:v4 \
+    chblaine/multiecho_pipeline:v5 \
     bash /data/pipeline/MultiEchofMRI-Pipeline/docker-scripts/merge_warp.sh "$id"
 	
 

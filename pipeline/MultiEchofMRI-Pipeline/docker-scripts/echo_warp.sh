@@ -93,7 +93,10 @@ echo "Submitting to cluster. Time from start to submission: $hours hour(s), $min
 
 # Make new dir for warped echo outputs & submit applywarp.sh
 
-mkdir -p "$R61/logs/warp"
+mkdir -p "$PROJECT/logs/warp"
+LOG=$PROJECT/logs/warp
+log_o=$LOG/${id}_warp_echo.o
+log_e=$LOG/${id}_warp_echo.e
 
 for i in $(seq 1 5) ; do
 
@@ -101,9 +104,9 @@ for i in $(seq 1 5) ; do
 
     echo "Running applywarp for echo ${i}..."
 
-    bash "$DOCKER_PIPELINE/applywarp_docker.sh" "$id" "$i" \
-        > "$PROJECT/logs/warp/${id}_warp_echo${i}.o" \
-        2> "$PROJECT/logs/warp/${id}_warp_echo${i}.e"
+    bash "$DOCKER_PIPELINE/applywarp_docker.sh" "$id" "$i" 
+
+   
 
     echo "Echo ${i} complete."
 
